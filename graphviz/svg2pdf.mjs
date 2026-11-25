@@ -9,14 +9,7 @@
 // XML parser to walk the tree, supplied by @xmldom/xmldom. That is why this can
 // run under bun with no DOM/canvas/native dependency.
 //
-// This file is the *source*; the vendored, self-contained artifact the toolchain
-// runs is `svg2pdf.bundle.js`, produced by:
-//
-//   bun install   # pins pdfkit, svg-to-pdfkit, @xmldom/xmldom (see README)
-//   bun build ./svg2pdf.mjs --target=bun --outfile=svg2pdf.bundle.js
-//
-// bun inlines every dependency (including pdfkit's standard-font metric data),
-// so the bundle needs no node_modules at run time.
+// Follow NOTICE.svg2pdf to rebuild the bundle and embed PDFKit runtime assets.
 import PDFDocument from "pdfkit";
 import SVGtoPDF from "svg-to-pdfkit";
 import { DOMParser } from "@xmldom/xmldom";
@@ -44,7 +37,7 @@ svg = svg
   .replace(/(<svg\b[^>]*?)\swidth="[^"]*"/, "$1")
   .replace(/(<svg\b[^>]*?)\sheight="[^"]*"/, "$1");
 
-const doc = new PDFDocument({ size: [W, H], margin: 0 });
+const doc = new PDFDocument({ size: [W, H], margin: 0, info: { CreationDate: new Date(0) } });
 const chunks = [];
 doc.on("data", (c) => chunks.push(c));
 const done = new Promise((resolve) => doc.on("end", resolve));
